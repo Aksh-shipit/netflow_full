@@ -15,3 +15,8 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 
 module.exports = app;
+
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
