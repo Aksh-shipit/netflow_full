@@ -1,47 +1,48 @@
 import axios from "axios";
 
+// Use the backend URL from environment variables
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
-  headers: { "Content-Type": "application/json" }, // Ensure JSON
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // deployed backend
+  headers: { "Content-Type": "application/json" },
 });
 
-/*----------------Login/Signup--------------*/
-export const registerUser = (data: { name: string; email: string; password: string }) =>
-  API.post("/auth/register", data);
+/* ---------------- AUTH ---------------- */
+export const registerUser = (data: { name: string; email: string; password: string }) => {
+  return API.post("/auth/register", data);
+};
 
-export const loginUser = (data: { email: string; password: string }) =>
-  API.post("/auth/login", data);
+export const loginUser = (data: { email: string; password: string }) => {
+  return API.post("/auth/login", data);
+};
 
 /* ---------------- NOTES ---------------- */
-
-export async function getNotes() {
+export const getNotes = async () => {
   const res = await API.get("/notes");
   return res.data;
-}
+};
 
-export async function createNote(note: { title: string; content: string; tags?: string[] }) {
+export const createNote = async (note: { title: string; content: string; tags?: string[] }) => {
   const res = await API.post("/notes", note);
   return res.data;
-}
+};
 
-export async function deleteNote(id: string) {
+export const deleteNote = async (id: string) => {
   const res = await API.delete(`/notes/${id}`);
   return res.data;
-}
+};
 
 /* ---------------- BOOKMARKS ---------------- */
-
-export async function getBookmarks() {
+export const getBookmarks = async () => {
   const res = await API.get("/bookmarks");
   return res.data;
-}
+};
 
-export async function createBookmark(bookmark: { title?: string; url: string; description?: string; tags?: string[] }) {
+export const createBookmark = async (bookmark: { title?: string; url: string; description?: string; tags?: string[] }) => {
   const res = await API.post("/bookmarks", bookmark);
   return res.data;
-}
+};
 
-export async function deleteBookmark(id: string) {
+export const deleteBookmark = async (id: string) => {
   const res = await API.delete(`/bookmarks/${id}`);
   return res.data;
-}
+};
