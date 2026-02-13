@@ -23,21 +23,31 @@ export default function NotesPage() {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
 
+  // Load notes safely
   async function loadNotes() {
     try {
       const data = await getNotes();
-      setNotes(data);
+      console.log("API Response:", data); // Debugging
+
+      // Ensure we always have an array
+      const notesArray = Array.isArray(data) ? data : data?.notes ?? [];
+      setNotes(notesArray);
     } catch (err) {
       toast.error("Failed to load notes");
+      setNotes([]); // fallback to empty array
     } finally {
       setLoading(false);
     }
   }
 
   async function handleDelete(id: string) {
-    await deleteNote(id);
-    toast.success("Note deleted");
-    loadNotes();
+    try {
+      await deleteNote(id);
+      toast.success("Note deleted");
+      loadNotes();
+    } catch {
+      toast.error("Failed to delete note");
+    }
   }
 
   async function handleCreate() {
@@ -46,17 +56,20 @@ export default function NotesPage() {
       return;
     }
 
-    await createNote({
-      title: newTitle,
-      content: newContent,
-      tags: [],
-    });
-
-    toast.success("Note created successfully");
-    setNewTitle("");
-    setNewContent("");
-    setOpen(false);
-    loadNotes();
+    try {
+      await createNote({
+        title: newTitle,
+        content: newContent,
+        tags: [],
+      });
+      toast.success("Note created successfully");
+      setNewTitle("");
+      setNewContent("");
+      setOpen(false);
+      loadNotes();
+    } catch {
+      toast.error("Failed to create note");
+    }
   }
 
   useEffect(() => {
@@ -70,7 +83,6 @@ export default function NotesPage() {
           {/* Header */}
           <div className="flex justify-between items-center mb-10">
             <h1 className="text-4xl font-bold">My Notes</h1>
-
             <button
               onClick={() => setOpen(true)}
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 transition text-white font-medium shadow-lg"
@@ -86,23 +98,15 @@ export default function NotesPage() {
                 <SkeletonCard key={i} />
               ))}
             </div>
-          ) : notes.length === 0 ? (
-            <p className="text-gray-400">No notes yet. Create one!</p>
-          ) : (
+          ) : Array.isArray(notes) && notes.length > 0 ? (
             <div className="grid md:grid-cols-2 gap-6">
               {notes.map((note) => (
                 <div
                   key={note._id}
                   className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:scale-105 transition shadow-lg"
                 >
-                  <h2 className="text-xl font-semibold mb-3">
-                    {note.title}
-                  </h2>
-
-                  <p className="text-gray-400">
-                    {note.content}
-                  </p>
-
+                  <h2 className="text-xl font-semibold mb-3">{note.title}</h2>
+                  <p className="text-gray-400">{note.content}</p>
                   <div className="flex justify-end mt-6">
                     <button
                       onClick={() => handleDelete(note._id)}
@@ -114,12 +118,13 @@ export default function NotesPage() {
                 </div>
               ))}
             </div>
+          ) : (
+            <p className="text-gray-400">No notes yet. Create one!</p>
           )}
 
           {/* Modal */}
           <Modal open={open} onClose={() => setOpen(false)}>
             <h2 className="text-2xl font-bold mb-6">Create Note</h2>
-
             <input
               type="text"
               placeholder="Title"
@@ -127,7 +132,6 @@ export default function NotesPage() {
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
             />
-
             <textarea
               placeholder="Content"
               className="w-full mb-4 p-3 rounded-xl bg-white/5 border border-white/10 outline-none"
@@ -135,7 +139,6 @@ export default function NotesPage() {
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
             />
-
             <button
               onClick={handleCreate}
               className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-105 transition text-white font-semibold"
