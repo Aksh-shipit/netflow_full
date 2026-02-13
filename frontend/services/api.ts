@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Use the backend URL from environment variables
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // deployed backend
+  baseURL: process.env.NEXT_API_URL, // deployed backend
   headers: { "Content-Type": "application/json" },
 });
 
