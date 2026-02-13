@@ -7,9 +7,9 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// ✅ CORS setup to allow requests from your frontend
+// ✅ CORS setup to allow requests from your frontend deployment
 app.use(cors({
-  origin: "https://netflowfrontend-git-main-sneha-agarwals-projects-023ec08b.vercel.app", // frontend URL
+  origin: "https://netflowfrontend-69lswhgi0-sneha-agarwals-projects-023ec08b.vercel.app", // your frontend URL
   methods: ["GET", "POST", "DELETE", "PUT", "PATCH"],
   credentials: true
 }));
