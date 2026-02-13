@@ -8,41 +8,41 @@ const API = axios.create({
 
 /* ---------------- AUTH ---------------- */
 export const registerUser = (data: { name: string; email: string; password: string }) => {
-  return API.post("/auth/register", data);
+  return API.post("/api/auth/register", data);
 };
 
 export const loginUser = (data: { email: string; password: string }) => {
-  return API.post("/auth/login", data);
+  return API.post("/api/auth/login", data);
 };
 
 /* ---------------- NOTES ---------------- */
 export const getNotes = async () => {
-  const res = await API.get("/notes");
+  const res = await API.get("/api/notes");
   return res.data;
 };
 
 export const createNote = async (note: { title: string; content: string; tags?: string[] }) => {
-  const res = await API.post("/notes", note);
+  const res = await API.post("/api/notes", note);
   return res.data;
 };
 
 export const deleteNote = async (id: string) => {
-  const res = await API.delete(`/notes/${id}`);
+  const res = await API.delete(`/api/notes/${id}`);
   return res.data;
 };
 
 /* ---------------- BOOKMARKS ---------------- */
 export const getBookmarks = async () => {
-  const res = await API.get("/bookmarks");
+  const res = await API.get("/api/bookmarks");
   return res.data;
 };
 
 export const createBookmark = async (bookmark: { title?: string; url: string; description?: string; tags?: string[] }) => {
-  const res = await API.post("/bookmarks", bookmark);
+  const res = await API.post("/api/bookmarks", bookmark);
   return res.data;
 };
 
 export const deleteBookmark = async (id: string) => {
-  const res = await API.delete(`/bookmarks/${id}`);
+  const res = await API.delete(`/api/bookmarks/${id}`);
   return res.data;
 };
