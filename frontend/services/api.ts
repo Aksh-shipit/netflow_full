@@ -1,8 +1,9 @@
 import axios from "axios";
 
-// Use the backend URL from environment variables
+// ✅ Make sure your backend URL does NOT end with a slash in .env
+// Example: NEXT_PUBLIC_API_URL=https://netflow-full-2ogpb9w1m-sneha-agarwals-projects-023ec08b.vercel.app
 const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // deployed backend
+  baseURL: process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, ""), // remove trailing slash if present
   headers: { "Content-Type": "application/json" },
 });
 
